@@ -10,5 +10,16 @@ class User(models.Model):
     email = models.CharField(max_length = 255)
     password = models.CharField(max_length = 255)
     birthdate = models.DateField(max_length =20, null=True)
+    level =  models.IntegerField(default = 1);
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
+class Inventory(models.Model):
+    name = models.CharField( max_length = 255)
+    lot_num = models.CharField(max_length = 15)
+    location = models.CharField(max_length = 50)
+    container = models.CharField(max_length = 100)
+    net_quantity = models.IntegerField()
+    pnet_quantity = models.IntegerField()
+    tquantity = models.FloatField()
+    mfg_date = models.DateTimeField()
+    action = models.TextField()

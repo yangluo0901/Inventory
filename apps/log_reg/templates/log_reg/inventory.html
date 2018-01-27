@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Inventory</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  {% load static %}
+
+</head>
+  <body>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="/">Home</a></li>
+          <li><a href="https://www.raasnutritionals.com/pages/about-us">About Us</a></li>
+          <li><a href="https://www.raasnutritionals.com/pages/contact">Contact Us</a></li>
+          <li><a href="http://www.kieuhoangwinery.com/">Napa Valley</a></li>
+          <li><a href="https://www.hummingbirdnestranch.com/">Humingbird</a></li>
+          <li><a href="http://www.raas-corp.com/page.aspx?node=95&f=en">Shanghai RAAS</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#"><span class="glyphicon glyphicon-user"></span>{{log_user.name}}</a></li>
+          <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container-fluid">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Lot Number</th>
+            <th>Location</th>
+            <th>Container</th>
+            <th>Net Quantity</th>
+            <th>Partial Quantity</th>
+            <th>Total Quantity</th>
+            <th>MFG date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for element in invens %}
+            <tr>
+              <td>{{element.name}}</td>
+              <td>{{element.lot_num}}</td>
+              <td>{{element.location}}</td>
+              <td>{{element.container}}</td>
+              <td>{{element.net_quantity}}</td>
+              <td>{{element.pnet_quantity}}</td>
+              <td>{{element.tquantity}}</td>
+              <td>{{element.mfg_date}}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <br><br><br>
+      <div class="col-sm-3 col-sm-offset-8">
+          <a href="/update_page/{{request.session.log_id}}"><button type="button" class="btn btn-primary" name="button">Update Inventory</button></a>
+      </div>
+
+    </div>
+
+  </body>
+</html>

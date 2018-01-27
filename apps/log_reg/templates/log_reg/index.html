@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load crispy_forms_tags %}
 <html>
   <head>
     <meta charset="utf-8">
@@ -18,17 +19,12 @@
     <nav class="navbar navbar-inverse">
       <div class="container-fluid">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="#">Home</a></li>
-          <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">About Us <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="#">About Us</a></li>
-              <li><a href="#">Contact Us</a></li>
-            </ul>
-          </li>
-          <li><a href="#">Contact Us</a></li>
-          <li><a href="#">Napa Valley</a></li>
-          <li><a href="#">Humingbird</a></li>
-          <li><a href="#">Shanghai RAAS</a></li>
+          <li class="active"><a href="/">Home</a></li>
+          <li><a href="https://www.raasnutritionals.com/pages/about-us">About Us</a></li>
+          <li><a href="https://www.raasnutritionals.com/pages/contact">Contact Us</a></li>
+          <li><a href="http://www.kieuhoangwinery.com/">Napa Valley</a></li>
+          <li><a href="https://www.hummingbirdnestranch.com/">Humingbird</a></li>
+          <li><a href="http://www.raas-corp.com/page.aspx?node=95&f=en">Shanghai RAAS</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
@@ -91,21 +87,36 @@
         <div class="col-sm-6">
           <fieldset>
             <legend>Register</legend>
-            <form class="form-horizontal" action="/registration" method="post">
-              {% csrf_token %}
-              {{regform}}
-              <input class="btn-primary" type="submit" name="register" value="Register">
-            </form>
+            <div class="col-sm-6 col-sm-offset-3">
+              <form class="form-horizontal" action="/registration" method="post">
+                {% csrf_token %}
+                {{regform|crispy}}
+                <input class="btn-primary" type="submit" name="register" value="Register">
+              </form>
+              {% if messages %}
+              <ul>
+                {% for message in messages %}
+                  <li>{{message}}</li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+            </div>
+            <div class="row">
+
+            </div>
+
           </fieldset>
         </div>
         <div class="col-sm-6">
           <fieldset>
             <legend>Login</legend>
-            <form class="" action="/login" method="post">
-              {% csrf_token %}
-              {{loginform}}
-              <input  class="btn-primary" type="submit" name="login" value="Log in">
-            </form>
+            <div class="col-sm-6 col-sm-offset-3">
+              <form class="" action="/login" method="post">
+                {% csrf_token %}
+                {{loginform|crispy}}
+                <input  class="btn-primary" type="submit" name="login" value="Log in">
+              </form>
+            </div>
           </fieldset>
         </div>
         <fieldset>
