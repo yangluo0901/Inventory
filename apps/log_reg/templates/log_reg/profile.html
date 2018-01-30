@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+{% load crispy_forms_tags %}
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    {% load static %}
+    <title>{{log_user.first_name}} profile</title>
+
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="/">Home</a></li>
+          <li><a href="https://www.raasnutritionals.com/pages/about-us">About Us</a></li>
+          <li><a href="https://www.raasnutritionals.com/pages/contact">Contact Us</a></li>
+          <li><a href="http://www.kieuhoangwinery.com/">Napa Valley</a></li>
+          <li><a href="https://www.hummingbirdnestranch.com/">Humingbird</a></li>
+          <li><a href="http://www.raas-corp.com/page.aspx?node=95&f=en">Shanghai RAAS</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/profile/{{log_user.id}}"><span class="glyphicon glyphicon-user"></span> {{log_user.first_name}}</a></li>
+          <li><a href="/"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="row">
+        <h1 class = "col-sm-4">Welcome ! {{log_user.first_name}}</h1>
+      </div>
+
+      <div class="row">
+        <p>First Name:                    {{log_user.first_name}}</p>
+        <p>Last Name:                     {{log_user.last_name}}</p>
+        <p>E-mail:                        {{log_user.email}}</p>
+      </div>
+      <div class="col-sm-4 col-sm-offset-3">
+        <form class="" action="/profile_update/{{log_user.id}}" method="post">
+          {% csrf_token %}
+          {{profile_form|crispy}}
+          <input type="submit" class="btn btn-success" name="submit" value="Update">
+        </form>
+
+      </div>
+
+
+    </div>
+  </body>
+</html>

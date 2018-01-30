@@ -27,8 +27,8 @@
           <li><a href="http://www.raas-corp.com/page.aspx?node=95&f=en">Shanghai RAAS</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="#"><span class="glyphicon glyphicon-user"></span>{{log_user.name}}</a></li>
-          <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+          <li><a href="/profile/{{log_user.id}}"><span class="glyphicon glyphicon-user"></span> {{log_user.first_name}}</a></li>
+          <li><a href="/"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
         </ul>
       </div>
     </nav>
@@ -62,9 +62,12 @@
         </tbody>
       </table>
       <br><br><br>
-      <div class="col-sm-3 col-sm-offset-8">
-          <a href="/update_page/{{request.session.log_id}}"><button type="button" class="btn btn-primary" name="button">Update Inventory</button></a>
-      </div>
+      {% if log_user.level == 2 %}
+        <div class="col-sm-3 col-sm-offset-8">
+            <a href="/update_page/{{request.session.log_id}}"><button type="button" class="btn btn-primary" name="button">Update Inventory</button></a>
+        </div>
+      {% endif %}
+
 
     </div>
 

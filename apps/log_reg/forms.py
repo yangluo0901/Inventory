@@ -6,7 +6,7 @@ import re
 import bcrypt
 password_regex = re.compile(r'^(?=.*[a-zA-Z])(?=.*\d).+$')
 class Regform(forms.ModelForm):
-    years = [x for x in range(1879, 2011)]
+    years = [x for x in range(1949, 2011)]
     confirm_password = forms.CharField(max_length=50, widget = forms.PasswordInput)
     birthdate = forms.DateField(initial=datetime.date.today,widget=forms.SelectDateWidget(years = years))
     class Meta:
@@ -80,3 +80,27 @@ class Invenform(forms.ModelForm):
             #'location' : forms.Select(choices = location_choices),
             'container': forms.Select(choices = container_choices)
         }
+class Profileform(forms.ModelForm):
+    old_password = forms.CharField(widget = forms.PasswordInput)
+    new_password = forms.CharField(widget = forms.PasswordInput)
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name','email']
+    def clean(self):
+        first_name = self.cleaned_data.get('first_name')
+        last_name = self.cleaned_data.get('last_name')
+        email = self.cleaned_data.get('email')
+        old_password = self.cleaned_data.get('old_password') # input old password
+        new_password = self.cleaned_data.get('new_password')
+        user = User.objects.filter(email = email)
+        password = user[0].password
+        if "@raasnutritionals" not in email:
+            raise forms.ValidationError("Please register with RAAS email")
+        if len(user) > 1:
+            raise forms.ValidationError("User already exists")
+        if len(old_password) < 8 or len(new_password) < 8:
+            raise forms.ValidationError('Password should be at least 8 characters')
+        elif not  password_regex.match(new_password):
+            raise forms.ValidationError('Password should at least have one letter')
+        elif not bcrypt.checkpw(old_password.encode(),password.encode()):
+            raise forms.ValidationError('Old password does not match !')

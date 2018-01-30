@@ -10,7 +10,7 @@ class User(models.Model):
     email = models.CharField(max_length = 255)
     password = models.CharField(max_length = 255)
     birthdate = models.DateField(max_length =20, null=True)
-    level =  models.IntegerField(default = 1);
+    level =  models.IntegerField(default = 1);# 2 IS MANAGEMENT LEVEL
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
 class Inventory(models.Model):
@@ -20,6 +20,6 @@ class Inventory(models.Model):
     container = models.CharField(max_length = 100)
     net_quantity = models.IntegerField()
     pnet_quantity = models.IntegerField()
-    tquantity = models.FloatField()
+    tquantity = models.FloatField(default = None)
     mfg_date = models.DateTimeField()
     action = models.TextField()
