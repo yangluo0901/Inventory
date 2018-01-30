@@ -1,17 +1,23 @@
 from django import forms
+from django.contrib.auth.models import User
 from .models import *
 import datetime
 import base64
 import re
 import bcrypt
 password_regex = re.compile(r'^(?=.*[a-zA-Z])(?=.*\d).+$')
-class Regform(forms.ModelForm):
+class UserProfileform(forms.ModelForm):
     years = [x for x in range(1949, 2011)]
-    confirm_password = forms.CharField(max_length=50, widget = forms.PasswordInput)
     birthdate = forms.DateField(initial=datetime.date.today,widget=forms.SelectDateWidget(years = years))
     class Meta:
+        model = UserProfile
+        fields = ['birthdate',]
+
+class Regform(forms.ModelForm):
+    confirm_password = forms.CharField(max_length=50, widget = forms.PasswordInput)
+    class Meta:
         model = User
-        fields=['first_name','last_name','email','password','birthdate']
+        fields=['first_name','last_name','email','password']
         widgets = {
             'password':forms.PasswordInput(),
             'email':forms.EmailInput(),

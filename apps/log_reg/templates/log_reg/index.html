@@ -90,7 +90,9 @@
             <div class="col-sm-6 col-sm-offset-3">
               <form class="form-horizontal" action="/registration" method="post">
                 {% csrf_token %}
+
                 {{regform|crispy}}
+                {{profile_form|crispy}}
                 <input class="btn-primary" type="submit" name="register" value="Register">
               </form>
               {% if messages %}
