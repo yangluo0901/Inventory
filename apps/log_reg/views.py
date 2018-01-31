@@ -38,22 +38,19 @@ def profile(request,id):
 #################################################
 
 def register(request):
-    bound_form = Regform(request.POST,instance=request.user)
-    bound_form2 = UserProfileform(request.POST,instance=request.user.userprofile)
+    bound_form = Regform(request.POST)
+    bound_form2 = UserProfileform(request.POST)
     if bound_form.is_valid() and bound_form2.is_valid():
-        birthdate = bound_form2.cleaned_data['birthdate']
-        reg_user2 = bound_form2.save(commit=False)
-        reg_user2.birthdate = birthdate
         reg_user = bound_form.save(commit=False)
-        bound_form2.save(commit=True)
-
         password = bound_form.cleaned_data['password'];
         reg_user.password = bcrypt.hashpw(password.encode(), bcrypt.gensalt(15))
-        bound_form.save(commit=True)
-
+        reg_user.save()
+        birthdate = bound_form2.cleaned_data['birthdate']
+        reg_user.userprofile.birthdate = birthdate
+        reg_user.userprofile.save()
         messages.success(request,"Registered successfully!")
     else:
-        return render(request, 'log_reg/index.html',{'loginform':Loginform(),'regform':bound_form})
+        return render(request, 'log_reg/index.html',{'loginform':Loginform(),'regform':bound_form,'profile_form':UserProfileform()})
     return redirect('/')
 def login(request):
     bound_form = Loginform(request.POST)

@@ -12,12 +12,15 @@ class UserProfileform(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['birthdate',]
+    def clean(self):
+            birthdate = self.cleaned_data['birthdate']
 
 class Regform(forms.ModelForm):
     confirm_password = forms.CharField(max_length=50, widget = forms.PasswordInput)
+    username = forms.CharField(label="Email")
     class Meta:
         model = User
-        fields=['first_name','last_name','email','password']
+        fields=['first_name','last_name','username','password']
         widgets = {
             'password':forms.PasswordInput(),
             'email':forms.EmailInput(),
@@ -26,10 +29,11 @@ class Regform(forms.ModelForm):
         cleaned_data = super(Regform,self).clean()
         first_name = cleaned_data.get('first_name')
         last_name = cleaned_data.get('last_name')
-        email = cleaned_data.get('email')
+        email = cleaned_data.get('username')
         password = cleaned_data.get('password')
         confirm_password = cleaned_data.get('confirm_password')
         user = User.objects.filter(email = email)
+        print email
         if "@raasnutritionals" not in email:
             raise forms.ValidationError("Please register with RAAS email")
         if len(user) > 0:
@@ -45,7 +49,7 @@ class Regform(forms.ModelForm):
 
 
 class Loginform(forms.Form):
-    email = forms.EmailField()
+    username = forms.CharField(label="Email")
     password = forms.CharField(max_length=50, widget = forms.PasswordInput)
     def clean(self):
         email = self.cleaned_data.get('email')
