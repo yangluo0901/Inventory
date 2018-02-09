@@ -27,11 +27,11 @@ class Regform(forms.ModelForm):
         }
     def clean(self):
         cleaned_data = super(Regform,self).clean()
-        first_name = cleaned_data.get('first_name')
-        last_name = cleaned_data.get('last_name')
-        email = cleaned_data.get('username')
-        password = cleaned_data.get('password')
-        confirm_password = cleaned_data.get('confirm_password')
+        first_name = self.cleaned_data.get('first_name')
+        last_name = self.cleaned_data.get('last_name')
+        email = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        confirm_password = self.cleaned_data.get('confirm_password')
         user = User.objects.filter(email = email)
         print email
         if "@raasnutritionals" not in email:
@@ -52,22 +52,21 @@ class Loginform(forms.Form):
     username = forms.CharField(label="Email")
     password = forms.CharField(max_length=50, widget = forms.PasswordInput)
     def clean(self):
-        email = self.cleaned_data.get('email')
+        email = self.cleaned_data.get('username')
         in_password = self.cleaned_data.get('password')
-        print in_password
-        login_users = User.objects.filter(email = email)
+        login_users = User.objects.filter(username = email)
         if len(login_users) == 0 :
             raise forms.ValidationError("User does not exit !")
 
         else:
-            password = User.objects.filter(email = email)[0].password
+            password = User.objects.filter(username = email)[0].password
             if not bcrypt.checkpw(in_password.encode(),password.encode()):
                 raise forms.ValidationError("Wrong password !")
 
 class Invenform(forms.ModelForm):
     name = forms.CharField(min_length = 5)
     years = [x for x in range(1879, 2011)]
-    #mfg_date = forms.DateField(initial=datetime.date.today,widget=forms.SelectDateWidget(years = years))
+    # mfg_date = forms.DateField(initial=datetime.date.today,widget=forms.SelectDateWidget(years = years))
     mfg_date = forms.DateField(input_formats=["%m/%d/%Y"])
     location_choices = (
         ('LR-WC1','LR-WC1'),
@@ -84,7 +83,7 @@ class Invenform(forms.ModelForm):
         container_choices = (
             ('0.74','740 ml bottle'),
             ('3.86','1 gallon jug'),
-            ('20','20 liters pail')
+            ('20','20 liters pail'),
         )
         widgets = {
             #'location' : forms.Select(choices = location_choices),

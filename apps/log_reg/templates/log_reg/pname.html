@@ -1,0 +1,40 @@
+{% extends './base.html'%}
+
+{% block title%}
+  <title>{{name}}</title>
+{% endblock %}
+
+{% block body %}
+<u><h2>{{name}}:</h2></u>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Lot Number</th>
+      <th>location</th>
+      <th>Container</th>
+      <th>Net Quantity</th>
+      <th>Partial Quantity</th>
+      <th>Total Quantity</th>
+      <th>MFG Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for product in products %}
+      <tr>
+        <td>{{product.lot_num}}</td>
+        <td>{{product.location}}</td>
+        <td>{{product.container}}</td>
+        <td>{{product.net_quantity}}</td>
+        <td>{{product.pnet_quantity}}</td>
+        <td>{{product.tquantity}}</td>
+        <td>{{product.mfg_date}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<hr>
+<div class="col-sm-offset-10">
+  <br>
+  <a href="/inventory/{{log_id}}"><button class="btn btn-success" type="button" name="button">Go Back</button></a>
+</div>
+{% endblock %}

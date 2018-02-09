@@ -6,7 +6,7 @@ from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, related_name="userprofile")
+    user = models.OneToOneField(User, related_name="userprofile", on_delete=models.CASCADE)
     birthdate = models.DateField(max_length =20, null=True)
     level =  models.IntegerField(default = 1);# 2 IS MANAGEMENT LEVEL
     created_at = models.DateTimeField(auto_now_add = True)
@@ -16,7 +16,7 @@ class UserProfile(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
-        
+
 
 # @receiver(post_save, sender=User)
 # def save_user_profile(sender, instance, **kwargs):
@@ -30,7 +30,7 @@ class Inventory(models.Model):
     location = models.CharField(max_length = 50)
     container = models.CharField(max_length = 100)
     net_quantity = models.IntegerField()
-    pnet_quantity = models.IntegerField()
+    pnet_quantity = models.FloatField(default = 0)
     tquantity = models.FloatField(default = None)
-    mfg_date = models.DateTimeField()
+    mfg_date = models.DateField()
     action = models.TextField()

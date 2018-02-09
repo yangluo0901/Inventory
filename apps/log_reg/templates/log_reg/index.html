@@ -13,7 +13,15 @@
 
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('.login').click(function(){
+          $('.form-horizontal').animate({scrollTop:$('#picture').offset().top},5000);
+          console.log("here");
+          console.log($('#picture').offset().top)
+        });
+      });
+    </script>
   </head>
   <body>
     <nav class="navbar navbar-inverse">
@@ -28,7 +36,7 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-          <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+          <li class="login"><a><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
         </ul>
       </div>
     </nav>
@@ -47,7 +55,7 @@
             </div>
           </div>
       </div>
-      <div class="row">
+      <div id="picture" class="row">
         <div class="col-sm-4">
           <div class="thumbnail">
             <a href="https://www.raasnutritionals.com/collections/all">
