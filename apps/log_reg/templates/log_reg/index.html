@@ -16,9 +16,13 @@
     <script type="text/javascript">
       $(document).ready(function(){
         $('.login').click(function(){
-          $('.form-horizontal').animate({scrollTop:$('#picture').offset().top},5000);
-          console.log("here");
-          console.log($('#picture').offset().top)
+          $('html,body').animate({scrollTop:"600px"},1000);
+        });
+        $('.register').click(function(){
+          $('html,body').animate({scrollTop:"600px"},1000);
+        });
+        $('.gotop').click(function(){
+          $('html,body').animate({scrollTop:"-600px"},1000);
         });
       });
     </script>
@@ -35,8 +39,8 @@
           <li><a href="http://www.raas-corp.com/page.aspx?node=95&f=en">Shanghai RAAS</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-          <li class="login"><a><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+          <li><a class="register" href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+          <li ><a class="login" href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
         </ul>
       </div>
     </nav>
@@ -96,7 +100,7 @@
           <fieldset>
             <legend>Register</legend>
             <div class="col-sm-6 col-sm-offset-3">
-              <form class="form-horizontal" action="/registration" method="post">
+              <form id="reg" class="form-horizontal" action="/registration" method="post">
                 {% csrf_token %}
 
                 {{regform|crispy}}
@@ -143,7 +147,7 @@
     }
 </style>
   <footer class="container-fluid text-center">
-  <a href="#myPage" title="To Top">
+  <a href="#" class="gotop" title="To Top">
     <span class="glyphicon glyphicon-chevron-up"></span>
   </a>
   <p>RAAS Inventory Made by <a href="https://www.raasnutritionals.com/" title="Visit w3schools">Yang Luo</a></p>
