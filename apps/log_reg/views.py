@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import bcrypt
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 from .forms import *
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
 from django.contrib.auth.decorators import login_required
+import json
 # #####################################
 # page load function below
 ##########################################
@@ -62,13 +63,13 @@ def register(request):
     bound_form = Regform(request.POST)
     bound_form2 = UserProfileform(request.POST)
     if bound_form.is_valid() and bound_form2.is_valid():
-        reg_user = bound_form.save(commit=False)
+        reg_user = bound_form.save(commit=False)# created an instance(instantiate) but no save into database
         password = bound_form.cleaned_data['password'];
         reg_user.password = bcrypt.hashpw(password.encode(), bcrypt.gensalt(15))
-        reg_user.save()
+        reg_user.save() # models.py line 15, when User saves, then an instance of UserProfile will be created
         birthdate = bound_form2.cleaned_data['birthdate']
-        reg_user.userprofile.birthdate = birthdate
-        reg_user.userprofile.save()
+        reg_user.userprofile.birthdate = birthdate  # reg_user is an instance of User, and User has OneToOne relationship with UserProfile with related_name "userprofile"
+        reg_user.userprofile.save()#
         messages.success(request,"Registered successfully!")
     else:
         return render(request, 'log_reg/index.html',{'loginform':Loginform(),'regform':bound_form,'profile_form':UserProfileform()})
@@ -82,7 +83,7 @@ def login(request):
         user_name = User.objects.filter(username = username)[0].first_name
         request.session['log_id'] = user_id
         request.session['log_name'] = user_name
-        user = authenticate(request, username = username, password = password)
+        user = authenticate(request, username = username, password = password) # customize authentication backend so that it is able to check hashed password
         if user is not None:
             print " user is not none"
             if user.is_active:
@@ -122,3 +123,27 @@ def profile_update(request, id):
         return redirect('profile', id = request.session['log_id'])
     else:
         return render(request, 'log_reg/profile.html', {'profile_form':bound_form, 'log_user':log_user})
+
+@login_required(login_url='/')
+def delete(request):
+    prodid = request.POST.get("prodid")
+    print "lalal delete inside view"
+    print prodid
+    d = Inventory.objects.get(id = prodid)
+    d.delete()
+    return HttpResponse("delete succeed!")
+
+@login_required(login_url='/')
+def edit(request):
+    data = []
+    data = request.POST.get("data")
+    data_list = json.loads(data) # make string back to list, also json.dumps() can be used to make list to string
+    prodid = request.POST.get("prodid")
+    e = Inventory.objects.get(id = prodid)
+    print data_list[2]
+    e.location = data_list[0]
+    e.container = data_list[1]
+    e.net_quantity = int(data_list[2])
+    e.pnet_quantity = float(data_list[3])
+    e.save()
+    return HttpResponse("saved change!")

@@ -3,9 +3,10 @@ from __future__ import unicode_literals
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User 
 # Create your models here.
 class UserProfile(models.Model):
+    #user OneToOne Relationship to extend build in User model, update and save data into database  by user.userprofile.[attribute name]
     user = models.OneToOneField(User, related_name="userprofile", on_delete=models.CASCADE)
     birthdate = models.DateField(max_length =20, null=True)
     level =  models.IntegerField(default = 1);# 2 IS MANAGEMENT LEVEL

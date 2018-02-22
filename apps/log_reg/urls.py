@@ -13,5 +13,7 @@ urlpatterns = [
     url(r'^update_page/(?P<id>\d+)$', views.update_page, name="update_page"),
     url(r'^profile/(?P<id>\d+)$', views.profile, name='profile'),
     url(r'^profile_update/(?P<id>\d+)$', views.profile_update),
-    url(r'^logout$', views.logout)
+    url(r'^logout$', views.logout),
+    url(r'^inventory/delete$', views.delete),
+    url(r'^inventory/edit$',views.edit)
 ]

@@ -16,6 +16,7 @@
         <th>Partial Quantity</th>
         <th>Total Quantity</th>
         <th>MFG date</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -23,12 +24,13 @@
         <tr>
           <td><a href="/inventory/product_name/{{element.name}}">{{element.name}}</a></td>
           <td>{{element.lot_num}}</td>
-          <td><a href="/inventory/location/{{element.location}}">{{element.location}}</a></td>
-          <td>{{element.container}}</td>
-          <td>{{element.net_quantity}}</td>
-          <td>{{element.pnet_quantity}}</td>
+          <td class="editable_location"><a href="/inventory/location/{{element.location}}">{{element.location}}</a></td>
+          <td class="editable_container">{{element.container}}</td>
+          <td class="editable_net">{{element.net_quantity}}</td>
+          <td class="editable_pnet">{{element.pnet_quantity}}</td>
           <td>{{element.tquantity}}</td>
           <td>{{element.mfg_date}}</td>
+          <td id="action_{{element.id}}"><span class="glyphicon glyphicon-pencil text-success" onclick="Edit({{element.id}},{{request.session.log_id}})"></span>     <span class="glyphicon glyphicon-trash text-warning" onclick="Delete({{element.id}},{{request.session.log_id}})"></span></td>
         </tr>
       {% endfor %}
     </tbody>

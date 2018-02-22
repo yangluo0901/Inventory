@@ -14,6 +14,76 @@
 
   <!-- Latest compiled JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////// set a custom X-CSRFToken header to the value of the CSRF token. //////////
+    function getCookie(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          var cookies = document.cookie.split(';');
+          for (var i = 0; i < cookies.length; i++) {
+              var cookie = jQuery.trim(cookies[i]);
+              // Does this cookie string begin with the name we want?
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
+  var csrftoken = getCookie('csrftoken');
+    //Setting the token on the AJAX request
+  function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+  }
+  $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+          if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+              xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          }
+      }
+  });
+  //////////////////////////////CSRF-token set end/////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////
+    function Delete(prodid,log_id){
+      $.post('/inventory/delete',{prodid:prodid}, function(){
+        console.log("delete success !");
+        window.location.replace(`/inventory/${log_id}`);
+      });
+    }
+
+    function Edit(prodid,log_id){
+      $('#action_'+prodid).html(`&nbsp&nbsp&nbsp&nbsp <span class='glyphicon glyphicon-floppy-disk' onclick='Save(${prodid},${log_id})'></span>`);
+      $('#action_'+prodid).siblings("td[class*='editable']").attr('contentEditable',true);
+    }
+
+
+    function Save(prodid,log_id){
+        $('#action_'+prodid).html(`<span class="glyphicon glyphicon-pencil text-success" onclick="Edit(${prodid},${log_id})"></span>
+        <span class="glyphicon glyphicon-trash text-warning" onclick="Delete(${prodid},${log_id})"></span>`);
+        $('#action_'+prodid).siblings(`td[class*='editable']`).attr('contentEditable',false);
+        var data = new Array();
+
+        $('#action_'+prodid).siblings(`td[class*='editable']`).each(function(){
+          if($(this).attr('class') == 'editable_location'){
+            var td =  $(this).children().html();
+
+          }else{
+            var td = $(this).html()
+          }
+
+          data.push(td);
+        });
+        console.log(data);
+        console.log(prodid);
+        $.post('/inventory/edit',{data:JSON.stringify(data),prodid:prodid},function(){
+          alert("Change has been saved!");
+          window.location.replace(`/inventory/${log_id}`);
+        })
+    }
+  </script>
   {% load static %}
 
 </head>
