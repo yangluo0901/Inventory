@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import bcrypt
+from datetime import datetime
 from django.shortcuts import render,redirect,HttpResponse
 from .forms import *
 from django.contrib import messages
@@ -34,7 +35,7 @@ def inventory(request,id):
 @login_required(login_url='/')
 def update_page(request,id):
     update_form = Invenform()
-    return render(request, 'log_reg/update.html',{'update_form':update_form})
+    return render(request, 'log_reg/update.html',{'update_form':update_form,'log_user':User.objects.filter(id = request.session['log_id'])[0]})
 @login_required(login_url='/')
 def profile(request,id):
     log_user = User.objects.filter(id = id)[0]
@@ -48,11 +49,13 @@ def location(request,location):
 @login_required(login_url="/")
 def pname(request,pname): # sort product by product name (pname)
     products = Inventory.objects.filter(name = pname).order_by("lot_num")
+
     context={
         "products":products,
         "name":pname,
         "log_id":request.session["log_id"],
-        "log_name":request.session["log_name"]
+        "log_name":request.session["log_name"],
+
     }
     return render(request, "log_reg/pname.html",context)
 ##############################################
@@ -127,8 +130,6 @@ def profile_update(request, id):
 @login_required(login_url='/')
 def delete(request):
     prodid = request.POST.get("prodid")
-    print "lalal delete inside view"
-    print prodid
     d = Inventory.objects.get(id = prodid)
     d.delete()
     return HttpResponse("delete succeed!")
@@ -140,10 +141,48 @@ def edit(request):
     data_list = json.loads(data) # make string back to list, also json.dumps() can be used to make list to string
     prodid = request.POST.get("prodid")
     e = Inventory.objects.get(id = prodid)
-    print data_list[2]
+    print "quantity is" +str(data_list[2])
     e.location = data_list[0]
     e.container = data_list[1]
     e.net_quantity = int(data_list[2])
     e.pnet_quantity = float(data_list[3])
+    e.tquantity = float(e.container)*e.net_quantity+e.pnet_quantity
+    print "total quantity are" + str(e.tquantity)
     e.save()
+    date_temp = datetime.datetime.strptime(data_list[5],"%m/%d/%Y").strftime("%Y-%m-%d")
+    History.objects.create(product = Inventory.objects.get(id = prodid),actioner=data[4],location = data_list[0],container = data_list[1],net_quantity = int(data_list[2]),pnet_quantity = float(data_list[3]),date=date_temp)
+    print date_temp
     return HttpResponse("saved change!")
+@login_required(login_url='/')
+def lot_num(request,lot_num):
+
+    product = Inventory.objects.filter(lot_num = lot_num)[0]
+    history = product.history.all()
+    print "lot number is " +str(product.lot_num)
+    action_form = Actionform()
+    return render(request,"log_reg/lot_num.html",{'product' : product, 'action_form':action_form, 'history':history})
+
+
+@login_required(login_url='/')
+def action(request, lot_num):
+    bound_form = Actionform(request.POST)
+    product = Inventory.objects.filter(lot_num = lot_num)[0]
+    history = product.history
+    if bound_form.is_valid():
+
+        container = product.container
+        action = bound_form.save(commit=False)
+        net = action.net_quantity
+        partial = action.pnet_quantity
+        action.tquantity = float(container)*net+partial
+        action.actioner = User.objects.filter(id = request.session['log_id'])[0].id
+        action.product_id = product.id
+        bound_form.save(commit=True)
+        ## update Inventory
+        product.net_quantity += net
+        product.pnet_quantity += partial
+        product.tquantity += action.tquantity
+        product.save()
+        return redirect('lot_num', lot_num = lot_num)
+    else:
+        return render(request,"log_reg/lot_num.html",{'product' : product, 'action_form':bound_form,'history':history})

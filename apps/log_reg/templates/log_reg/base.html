@@ -57,31 +57,61 @@
     function Edit(prodid,log_id){
       $('#action_'+prodid).html(`&nbsp&nbsp&nbsp&nbsp <span class='glyphicon glyphicon-floppy-disk' onclick='Save(${prodid},${log_id})'></span>`);
       $('#action_'+prodid).siblings("td[class*='editable']").attr('contentEditable',true);
+      $('#action_'+prodid).siblings(".selectable_container").html(`<select>
+                                                                        <option value="0.74">740ml bottle<option>
+                                                                        <option value="3.86">1 gallon jug<option>
+                                                                        <option value="20">20 liters pail<option>
+                                                                  </select>
+                                                                    `);
+      $('#action_'+prodid).siblings(".selectable_location").html(`<select>
+                                                                        <option value="LR-WC1">LR-WC1<option>
+                                                                        <option value="LR-WC2">LR-WC2<option>
+                                                                        <option value="PP-REFRIG1">PP-REFRIG1<option>
+                                                                        <option value="PP-REFRIG2">PP-REFRIG2<option>
+                                                                        <option value="PP-REFRIG3">PP-REFRIG3<option>
+                                                                  </select>
+                                                                    `)
+
     }
 
 
     function Save(prodid,log_id){
         $('#action_'+prodid).html(`<span class="glyphicon glyphicon-pencil text-success" onclick="Edit(${prodid},${log_id})"></span>
         <span class="glyphicon glyphicon-trash text-warning" onclick="Delete(${prodid},${log_id})"></span>`);
-        $('#action_'+prodid).siblings(`td[class*='editable']`).attr('contentEditable',false);
+        // $('#action_'+prodid).siblings(`td[class*='editable']`).attr('contentEditable',false);
+        //   $('#action_'+prodid).siblings(`.selectable_location`).html(`<a href="/inventory/location/{{element.location}}">{{element.location}}</a>`)
         var data = new Array();
 
-        $('#action_'+prodid).siblings(`td[class*='editable']`).each(function(){
-          if($(this).attr('class') == 'editable_location'){
-            var td =  $(this).children().html();
-
-          }else{
-            var td = $(this).html()
+        $('#action_'+prodid).siblings(`td[class*='able']`).each(function(){
+          if($(this).attr("class").indexOf("selectable") != -1)
+          {
+            var td = $(this).children().val();
           }
+          else {
+            var td = $(this).html();
+          }
+
+
 
           data.push(td);
         });
+        var text;
+        var person = prompt("Please enter the name who make action to this product:");
+        var date = prompt("Please enter the date of action:","mm/dd/yyyy");
+        if (person == null || person == "") {
+          txt = null;
+        } else if(date != null && date != ""){
+            txt = person;
+            data.push(text);
+            data.push(date);
+            $.post('/inventory/edit',{data:JSON.stringify(data),prodid:prodid},function(){
+              alert("Change has been saved!");
+              window.location.replace(`/inventory/${log_id}`);
+            })
+        }
         console.log(data);
         console.log(prodid);
-        $.post('/inventory/edit',{data:JSON.stringify(data),prodid:prodid},function(){
-          alert("Change has been saved!");
-          window.location.replace(`/inventory/${log_id}`);
-        })
+
     }
   </script>
   {% load static %}

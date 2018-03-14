@@ -113,3 +113,17 @@ class Profileform(forms.ModelForm):
             raise forms.ValidationError('Password should at least have one letter')
         elif not bcrypt.checkpw(old_password.encode(),password.encode()):
             raise forms.ValidationError('Old password does not match !')
+class Actionform(forms.ModelForm):
+
+    location_choices = (
+        ('LR-WC1','LR-WC1'),
+        ('LR-WC2','LR-WC2'),
+        ('PP-REFRIG1','PP-REFRIG1'),
+        ('PP-REFRIG2','PP-REFRIG2'),
+        ('PP-REFRIG3','PP-REFRIG3')
+    )
+    location = forms.ChoiceField(choices = location_choices)
+    date = forms.DateField(input_formats=["%m/%d/%Y"], widget=forms.DateInput(attrs={'placeholder': 'mm/dd/yyyy'}))
+    class Meta:
+        model = History
+        fields=['net_quantity','pnet_quantity','date']

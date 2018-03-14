@@ -1,0 +1,52 @@
+{% extends './base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+  <title>{{product.lot_num}}</title>
+{% endblock %}
+{% block body %}
+  <div class="container-fluid">
+    <div class="col-sm-offset-2">
+      <u ><h2>{{product.lot_num}}</h2></u>
+    </div>
+
+      <div class="col-sm-6 col-sm-offset-4">
+
+        <h4>Product Name: &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{product.name}}</h4>
+        <h4>Location:  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp                                     {{product.location}}</h4>
+        <h4>Container:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp                                       {{product.container}}</h4>
+        <h4>Net Quantity::  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp                                 {{product.net_quantity}}</h4>
+        <h4>Partial Quantity:  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp                              {{product.pnet_quantity}}</h4>
+        <h4>Total Quantity:    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp                              {{product.tquantity}}</h4>
+      </div>
+
+      <div class="col-sm-4 col-sm-offset-3">
+        <form class="" action="/inventory/action/{{product.lot_num}}" method="post">
+          {% csrf_token %}
+          {{action_form|crispy}}
+          <input type="hidden" name="" value="">
+          <input type="submit" class="btn btn-success" name="submit" value="Update">
+        </form>
+      </div>
+      <div class="col-sm-10 col-sm-offset-3">
+      <h2>History</h2>
+      {% if history %}
+
+        <ul>
+          {% for action in history %}
+            {% if action.net_quantity < 0 %}
+              <li style="font-size=:150%">{{action.actioner}} pull outs {{action.net_quantity}} * {{action.container }} plus {{action.pnet_quantity}}, total {{action.tquantity}}, at {{action.date}}</li>
+            {% else %}
+            <li style="font-size:150%">{{action.actioner}} returns {{action.net_quantity}} * {{action.container }}plus {{action.pnet_quantity}}, total {{action.tquantity}}, at {{action.date}}</li>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        </ul>
+      </div>
+
+      <div class="col-sm-4 col-sm-offset-10">
+          <a href="/inventory/action/{{product.lot_number}}"><button type="button" class="btn btn-primary" name="button">Pull-out/Return</button></a>
+      </div>
+</div>
+
+
+{% endblock %}

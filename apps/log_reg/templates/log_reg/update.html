@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 {% extends './base.html'%}
 {% load crispy_forms_tags %}
+{% block nav %}
+<li><a href="/inventory/{{log_user.id}}"><span class="glyphicon glyphicon-book"></span> Dashboard</a></li>
+{}% endblock %}
 {% block title %}
     <title>Update</title>
 {% endblock %}

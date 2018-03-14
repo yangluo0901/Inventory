@@ -23,9 +23,9 @@
       {% for element in invens %}
         <tr>
           <td><a href="/inventory/product_name/{{element.name}}">{{element.name}}</a></td>
-          <td>{{element.lot_num}}</td>
-          <td class="editable_location"><a href="/inventory/location/{{element.location}}">{{element.location}}</a></td>
-          <td class="editable_container">{{element.container}}</td>
+          <td><a href="/inventory/lot_number/{{element.lot_num}}">{{element.lot_num}}</a></td>
+          <td class="selectable_location"><a href="/inventory/location/{{element.location}}">{{element.location}}</a></td>
+          <td class="selectable_container">{{element.container}}</td>
           <td class="editable_net">{{element.net_quantity}}</td>
           <td class="editable_pnet">{{element.pnet_quantity}}</td>
           <td>{{element.tquantity}}</td>
@@ -38,8 +38,9 @@
   <br><br><br>
   {% if log_user.userprofile.level == 2 %}
     <div class="col-sm-4 col-sm-offset-10">
-        <a href="/update_page/{{request.session.log_id}}"><button type="button" class="btn btn-primary" name="button">Update Inventory</button></a>
+        <a href="/update_page/{{request.session.log_id}}"><button type="button" class="btn btn-primary" name="button">New Product</button></a>
     </div>
+
   {% endif %}
 
 

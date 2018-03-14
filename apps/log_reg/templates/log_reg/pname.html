@@ -21,7 +21,7 @@
   <tbody>
     {% for product in products %}
       <tr>
-        <td>{{product.lot_num}}</td>
+        <td><a href="/inventory/lot_number/{{product.lot_num}}">{{product.lot_num}}</a></td>
         <td>{{product.location}}</td>
         <td>{{product.container}}</td>
         <td>{{product.net_quantity}}</td>
@@ -37,4 +37,6 @@
   <br>
   <a href="/inventory/{{log_id}}"><button class="btn btn-success" type="button" name="button">Go Back</button></a>
 </div>
+
+
 {% endblock %}
