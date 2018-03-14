@@ -1,5 +1,5 @@
 {% extends './base.html'%}
-
+{% load crispy_forms_tags %}
 
 {% block nav %}
 <li><a href="/inventory/{{log_user.id}}"><span class="glyphicon glyphicon-book"></span> Dashboard</a></li>
@@ -14,11 +14,12 @@
       <div class="row">
         <h1 class = "col-sm-4">Welcome ! {{log_user.first_name}}</h1>
       </div>
+      <hr>
 
       <div class="row">
         <p>First Name:                    {{log_user.first_name}}</p>
         <p>Last Name:                     {{log_user.last_name}}</p>
-        <p>E-mail:                        {{log_user.email}}</p>
+        <p>E-mail:                        {{log_user.username}}</p>
       </div>
       <div class="col-sm-4 col-sm-offset-3">
         <form class="" action="/profile_update/{{log_user.id}}" method="post">

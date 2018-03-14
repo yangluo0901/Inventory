@@ -156,22 +156,26 @@ def edit(request):
 @login_required(login_url='/')
 def lot_num(request,lot_num):
 
-    product = Inventory.objects.filter(lot_num = lot_num)[0]
-    history = product.history.all()
-    print "lot number is " +str(product.lot_num)
+    products = Inventory.objects.filter(lot_num = lot_num)
+    # history = product.history.all()
+
+
     action_form = Actionform()
-    return render(request,"log_reg/lot_num.html",{'product' : product, 'action_form':action_form, 'history':history})
+    return render(request,"log_reg/lot_num.html",{'products' : products, 'action_form':action_form})
 
 
 @login_required(login_url='/')
 def action(request, lot_num):
     bound_form = Actionform(request.POST)
-    product = Inventory.objects.filter(lot_num = lot_num)[0]
-    history = product.history
+    print request.POST.get("location")
+
     if bound_form.is_valid():
 
-        container = product.container
         action = bound_form.save(commit=False)
+        print action.location
+        product = Inventory.objects.filter(lot_num = lot_num,location = action.location)[0]
+        history = product.history
+        container = product.container
         net = action.net_quantity
         partial = action.pnet_quantity
         action.tquantity = float(container)*net+partial
@@ -185,4 +189,4 @@ def action(request, lot_num):
         product.save()
         return redirect('lot_num', lot_num = lot_num)
     else:
-        return render(request,"log_reg/lot_num.html",{'product' : product, 'action_form':bound_form,'history':history})
+        return render(request,"log_reg/lot_num.html",{'product' : product, 'action_form':bound_form})

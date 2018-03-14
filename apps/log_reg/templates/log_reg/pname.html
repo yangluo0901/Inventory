@@ -3,6 +3,9 @@
 {% block title%}
   <title>{{name}}</title>
 {% endblock %}
+{% block nav %}
+<li><a href="/inventory/{{request.session.log_id}}"><span class="glyphicon glyphicon-book"></span> Dashboard</a></li>
+{% endblock %}
 
 {% block body %}
 <u><h2>{{name}}:</h2></u>

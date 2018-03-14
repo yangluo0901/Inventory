@@ -47,6 +47,16 @@
   });
   //////////////////////////////CSRF-token set end/////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////
+
+  $(document).ready(function(){
+    $(".li_hidden").slice(0,4).show();
+
+    $(".show_more").click(function()
+    {
+        console.log("i am insdie")
+      $("li[style*='display:none']").slice(0,3).show();
+    });
+  });
     function Delete(prodid,log_id){
       $.post('/inventory/delete',{prodid:prodid}, function(){
         console.log("delete success !");
@@ -129,7 +139,7 @@
           <li><a href="http://www.raas-corp.com/page.aspx?node=95&f=en">Shanghai RAAS</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="/profile/{{log_user.id}}"><span class="glyphicon glyphicon-user"></span> {{log_user.first_name}}</a></li>
+          <li><a href="/profile/{{request.session.log_id}}"><span class="glyphicon glyphicon-user"></span> {{request.session.log_name}}</a></li>
           {% block nav %}
           {% endblock %}
           <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>

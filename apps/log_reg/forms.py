@@ -122,8 +122,8 @@ class Actionform(forms.ModelForm):
         ('PP-REFRIG2','PP-REFRIG2'),
         ('PP-REFRIG3','PP-REFRIG3')
     )
-    location = forms.ChoiceField(choices = location_choices)
+    location = forms.ChoiceField(choices = location_choices,required=True)
     date = forms.DateField(input_formats=["%m/%d/%Y"], widget=forms.DateInput(attrs={'placeholder': 'mm/dd/yyyy'}))
     class Meta:
         model = History
-        fields=['net_quantity','pnet_quantity','date']
+        fields=['net_quantity','pnet_quantity','date','location']

@@ -1,52 +1,64 @@
 {% extends './base.html' %}
 {% load crispy_forms_tags %}
 {% block title %}
-  <title>{{product.lot_num}}</title>
+  <title>{{products.0.lot_num}}</title>
+{% endblock %}
+{% block nav %}
+<li><a href="/inventory/{{request.session.log_id}}"><span class="glyphicon glyphicon-book"></span> Dashboard</a></li>
 {% endblock %}
 {% block body %}
-  <div class="container-fluid">
-    <div class="col-sm-offset-2">
-      <u ><h2>{{product.lot_num}}</h2></u>
-    </div>
-
-      <div class="col-sm-6 col-sm-offset-4">
-
-        <h4>Product Name: &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{product.name}}</h4>
-        <h4>Location:  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp                                     {{product.location}}</h4>
-        <h4>Container:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp                                       {{product.container}}</h4>
-        <h4>Net Quantity::  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp                                 {{product.net_quantity}}</h4>
-        <h4>Partial Quantity:  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp                              {{product.pnet_quantity}}</h4>
-        <h4>Total Quantity:    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp                              {{product.tquantity}}</h4>
-      </div>
-
+<h2>{{products.0.name}}</h2>
+  <div class="container">
+    <table class="table table striped">
+      <thead>
+        <tr>
+          <th>Location</th>
+          <th>Container</th>
+          <th>Net Quantity</th>
+          <th>Partial Quantity</th>
+          <th>Total Quantity</th>
+          <th>MFG date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+          <tr>
+            <td><a href="/inventory/location/{{product.location}}">{{product.location}}</a></td>
+            <td>{{product.container}}</td>
+            <td>{{product.net_quantity}}</td>
+            <td>{{product.pnet_quantity}}</td>
+            <td>{{product.tquantity}}</td>
+            <td>{{product.mfg_date}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
       <div class="col-sm-4 col-sm-offset-3">
-        <form class="" action="/inventory/action/{{product.lot_num}}" method="post">
+        <form class="" action="/inventory/action/{{products.0.lot_num}}" method="post">
           {% csrf_token %}
           {{action_form|crispy}}
-          <input type="hidden" name="" value="">
-          <input type="submit" class="btn btn-success" name="submit" value="Update">
+          <div class="col-sm-4 col-sm-offset-8">
+              <input type="submit" class="btn btn-primary" name="button" value="Pull-out/Return"></button>
+          </div>
         </form>
       </div>
       <div class="col-sm-10 col-sm-offset-3">
-      <h2>History</h2>
-      {% if history %}
-
-        <ul>
-          {% for action in history %}
-            {% if action.net_quantity < 0 %}
-              <li style="font-size=:150%">{{action.actioner}} pull outs {{action.net_quantity}} * {{action.container }} plus {{action.pnet_quantity}}, total {{action.tquantity}}, at {{action.date}}</li>
-            {% else %}
-            <li style="font-size:150%">{{action.actioner}} returns {{action.net_quantity}} * {{action.container }}plus {{action.pnet_quantity}}, total {{action.tquantity}}, at {{action.date}}</li>
+        <h2>History</h2>
+        {% for product in products %}
+          {% if product.history.all %}
+            <ul>
+              {% for action in product.history.all %}
+                {% if action.net_quantity < 0 %}
+                  <li style="font-size:130%;display:none;" class="li_hidden">{{action.actioner}} <code>pull outs</code> {{action.net_quantity}} * {{action.container }}&nbsp;plus {{action.pnet_quantity}}, total {{action.tquantity}}, <code>from {{product.location}}</code> at {{action.date}}</li>
+                {% else %}
+                <li style="font-size:130%;display:none;" class="li_hidden">{{action.actioner}} <code>returns</code> {{action.net_quantity}} * {{action.container }}&nbsp;plus {{action.pnet_quantity}}, total {{action.tquantity}},<code>from {{product.location}}</code> at {{action.date}}</li>
+                {% endif %}
+              {% endfor %}
             {% endif %}
-          {% endfor %}
-        {% endif %}
-        </ul>
+        {% endfor %}
+          </ul>
+          <a href="#" class="show_more"><u >Show more ... </u></a>
       </div>
-
-      <div class="col-sm-4 col-sm-offset-10">
-          <a href="/inventory/action/{{product.lot_number}}"><button type="button" class="btn btn-primary" name="button">Pull-out/Return</button></a>
-      </div>
+      <br/>
 </div>
-
-
 {% endblock %}
