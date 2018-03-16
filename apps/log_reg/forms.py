@@ -84,6 +84,7 @@ class Invenform(forms.ModelForm):
             ('0.74','740 ml bottle'),
             ('3.86','1 gallon jug'),
             ('20','20 liters pail'),
+            ('20','340 ml bottle'),
         )
         widgets = {
             #'location' : forms.Select(choices = location_choices),

@@ -4,7 +4,10 @@
 {% endblock %}
 
 {%block body %}
-<div class="container-fluid">
+<div class="container-fluid" style="margin-top:80px">
+  <h4>Search the table by product names, lot number or location:</h4>
+  <input class="form-control" id="myInput" type="text" placeholder="Search..">
+  <br>
   <table class="table table-hover">
     <thead>
       <tr>
@@ -19,7 +22,7 @@
         <th>Action</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="myTable">
       {% for element in invens %}
         <tr>
           <td><a href="/inventory/product_name/{{element.name}}">{{element.name}}</a></td>

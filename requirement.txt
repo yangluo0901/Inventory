@@ -4,8 +4,6 @@ click==6.7
 Django==1.11.5
 django-crispy-forms==1.7.0
 django-debug-toolbar==1.9.1
-Flask==0.12.2
-Flask-SQLAlchemy==2.3.2
 itsdangerous==0.24
 Jinja2==2.9.6
 MarkupSafe==1.0
