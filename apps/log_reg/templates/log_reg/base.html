@@ -5,6 +5,7 @@
   {% block title %}
     <title>Inventory</title>
   {% endblock %}
+  {% load static %}
   <link rel="stylesheet" href="{% static 'log_reg/css/sytle.css'%}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Latest compiled and minified CSS -->
@@ -138,13 +139,13 @@
 
 </head>
   <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-inverse navbar-fixed-top" style="background-color:rgba(255, 0, 0, 0.2);">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="#">WebSiteName</a>
+          <a class="navbar-brand" href="#">RAAS Inventory</a>
         </div>
         <ul class="nav navbar-nav">
-          <li class="active"><a href="/">Home</a></li>
+          <li class="active"><a href="/" style="background-color:rgba(255, 0, 0, 0.4);;">Home</a></li>
           <li><a href="https://www.raasnutritionals.com/pages/about-us">About Us</a></li>
           <li><a href="https://www.raasnutritionals.com/pages/contact">Contact Us</a></li>
           <li><a href="http://www.kieuhoangwinery.com/">Napa Valley</a></li>
