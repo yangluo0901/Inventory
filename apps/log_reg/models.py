@@ -43,5 +43,6 @@ class History(models.Model):
     pnet_quantity = models.FloatField(default = 0)
     location = models.CharField(max_length = 50)
     tquantity = models.FloatField(default = 0)
-    date = models.DateField(default = None)
+    date = models.DateField()
     product = models.ForeignKey(Inventory, related_name="history")
+    document = models.FileField(upload_to='documents/%Y/%m/%d',default = None)

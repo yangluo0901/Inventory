@@ -3,10 +3,12 @@
 {% block title %}
   <title>{{products.0.lot_num}}</title>
 {% endblock %}
+
 {% block nav %}
 <li><a href="/inventory/{{request.session.log_id}}"><span class="glyphicon glyphicon-book"></span> Dashboard</a></li>
 {% endblock %}
 {% block body %}
+{% load static %}
 <h2 style="margin-top:80px">{{products.0.name}}</h2>
   <div class="container">
     <table class="table table striped">
@@ -34,7 +36,7 @@
       </tbody>
     </table>
       <div class="col-sm-4 col-sm-offset-3">
-        <form class="" action="/inventory/action/{{products.0.lot_num}}" method="post">
+        <form class="" action="/inventory/action/{{products.0.lot_num}}" method="post" enctype="multipart/form-data">
           {% csrf_token %}
           {{action_form|crispy}}
           <div class="col-sm-4 col-sm-offset-8">
@@ -46,13 +48,15 @@
         <h2>History</h2>
         {% for product in products %}
           {% if product.history.all %}
-            <ul>
+            <ul id="history">
               {% for action in product.history.all %}
+
                 {% if action.net_quantity < 0 %}
-                  <li style="font-size:130%;display:none;" class="li_hidden">{{action.actioner}} <code>pull outs</code> {{action.net_quantity}} * {{action.container }}&nbsp;plus {{action.pnet_quantity}}, total {{action.tquantity}}, <code>from {{product.location}}</code> at {{action.date}}</li>
+                  <a><li id="{{action.id}}"style="font-size:130%;display:none;" class="li_hidden">{{action.actioner}} <code>pull outs</code> {{action.net_quantity}} * {{action.container }}&nbsp;plus {{action.pnet_quantity}}, total {{action.tquantity}}, <code>from {{product.location}}</code> at {{action.date}}</li></a>
                 {% else %}
-                <li style="font-size:130%;display:none;" class="li_hidden">{{action.actioner}} <code>returns</code> {{action.net_quantity}} * {{action.container }}&nbsp;plus {{action.pnet_quantity}}, total {{action.tquantity}},<code>from {{product.location}}</code> at {{action.date}}</li>
+                <a><li id="{{action.id}}" style="font-size:130%;display:none;" class="li_hidden">{{action.actioner}} <code>returns</code> {{action.net_quantity}} * {{action.container }}&nbsp;plus {{action.pnet_quantity}}, total {{action.tquantity}},<code>from {{product.location}}</code> at {{action.date}}</li></a>
                 {% endif %}
+
               {% endfor %}
             {% endif %}
         {% endfor %}
@@ -61,4 +65,14 @@
       </div>
       <br/>
 </div>
+<script>
+  $(document).ready(function(){
+    $("#history li").click(function(){
+      console.log("i am here");
+      var id = $(this).attr('id');
+      console.log(id);
+      window.open(`/action/document/${id}`,'Requisition form');
+    });
+  });
+</script>
 {% endblock %}

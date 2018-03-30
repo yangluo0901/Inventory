@@ -125,3 +125,6 @@ STATIC_URL = '/static/'
 AUTHENTICATION_BACKENDS = (
         'apps.log_reg.backend.HashpwBackend',
 )
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

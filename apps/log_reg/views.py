@@ -3,6 +3,9 @@ from __future__ import unicode_literals
 import bcrypt
 from datetime import datetime
 from django.shortcuts import render,redirect,HttpResponse
+import os
+import django
+from Inventory.settings import BASE_DIR
 from .forms import *
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
@@ -160,20 +163,22 @@ def lot_num(request,lot_num):
     # history = product.history.all()
 
 
-    action_form = Actionform()
+    action_form = Actionform(initial={"lot_num":lot_num})
+
     return render(request,"log_reg/lot_num.html",{'products' : products, 'action_form':action_form})
 
 
 @login_required(login_url='/')
 def action(request, lot_num):
-    bound_form = Actionform(request.POST)
+    bound_form = Actionform(request.POST,request.FILES)
     print request.POST.get("location")
+    print bound_form.is_valid()
+    products = Inventory.objects.filter(lot_num = lot_num)
 
     if bound_form.is_valid():
 
         action = bound_form.save(commit=False)
-        print action.location
-        product = Inventory.objects.filter(lot_num = lot_num,location = action.location)[0]
+        product = Inventory.objects.filter(lot_num = lot_num, location =action.location)[0]
         history = product.history
         container = product.container
         net = action.net_quantity
@@ -189,4 +194,15 @@ def action(request, lot_num):
         product.save()
         return redirect('lot_num', lot_num = lot_num)
     else:
-        return render(request,"log_reg/lot_num.html",{'product' : product, 'action_form':bound_form})
+        return render(request,"log_reg/lot_num.html",{'products' : products, 'action_form':bound_form})
+def document(request,id):
+        action = History.objects.filter(id = id )[0]
+        print BASE_DIR
+
+        url = str(BASE_DIR+action.document.url)
+        print url
+
+        with open( url, 'rb') as pdf:
+            response = HttpResponse(pdf.read(), content_type='application/pdf')
+            response['Content-Disposition'] = 'inline;filename="pull_out.pdf"'
+            return response

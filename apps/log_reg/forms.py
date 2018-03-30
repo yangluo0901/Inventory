@@ -115,7 +115,7 @@ class Profileform(forms.ModelForm):
         elif not bcrypt.checkpw(old_password.encode(),password.encode()):
             raise forms.ValidationError('Old password does not match !')
 class Actionform(forms.ModelForm):
-
+    lot_num = forms.CharField(max_length=50, widget=forms.HiddenInput())
     location_choices = (
         ('LR-WC1','LR-WC1'),
         ('LR-WC2','LR-WC2'),
@@ -124,7 +124,13 @@ class Actionform(forms.ModelForm):
         ('PP-REFRIG3','PP-REFRIG3')
     )
     location = forms.ChoiceField(choices = location_choices,required=True)
-    date = forms.DateField(input_formats=["%m/%d/%Y"], widget=forms.DateInput(attrs={'placeholder': 'mm/dd/yyyy'}))
+    date = forms.DateField(input_formats=["%m/%d/%Y"], initial= datetime.datetime.now().strftime("%m/%d/%Y")  )
     class Meta:
         model = History
-        fields=['net_quantity','pnet_quantity','date','location']
+        fields=['net_quantity','pnet_quantity','date','location','document','lot_num']
+    def clean(self):
+        location = self.cleaned_data.get('location')
+        lot_num = self.cleaned_data.get('lot_num')
+        if len(Inventory.objects.filter(lot_num = lot_num, location = location)) == 0:
+            print " i am here"
+            raise forms.ValidationError("Wrong location!")

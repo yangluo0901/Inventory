@@ -17,5 +17,6 @@ urlpatterns = [
     url(r'^logout$', views.logout),
     url(r'^inventory/delete$', views.delete),
     url(r'^inventory/edit$',views.edit),
+    url(r'^action/document/(?P<id>\d+)$',views.document),
     url(r'^inventory/action/(?P<lot_num>[a-zA-z0-9 -\.&]*)$',views.action)
 ]
