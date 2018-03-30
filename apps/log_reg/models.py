@@ -37,7 +37,7 @@ class Inventory(models.Model):
 
 
 class History(models.Model):
-    actioner = models.CharField(max_length = 225)
+    actioner = models.ForeignKey(User, related_name='action')
     container = models.CharField(max_length = 100)
     net_quantity = models.IntegerField()
     pnet_quantity = models.FloatField(default = 0)
